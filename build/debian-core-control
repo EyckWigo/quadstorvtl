@@ -1,9 +1,0 @@
-Package: quadstor-vtl-core
-Version: 2.2.16 
-Section: base
-Priority: optional
-Architecture: amd64 
-Depends: uuid-runtime, sg3-utils, psmisc
-Conflicts: quadstor-itf
-Maintainer: QUADStor VTL Support <vtlsupport@quadstor.com>
-Description: QUADStor virtual tape library
