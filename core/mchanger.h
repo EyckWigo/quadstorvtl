@@ -252,7 +252,6 @@ int mchanger_cmd_access_ok(struct mchanger *mchanger, struct qsio_scsiio *ctio);
 /* Need to implement mandatory send_diagnostic */
 
 void vibmtl_init_handlers(struct mchanger *mchanger);
-void vqtl_init_handlers(struct mchanger *mchanger);
 void vadic_init_handlers(struct mchanger *mchanger);
 void vhptl_init_handlers(struct mchanger *mchanger);
 struct tape * element_vcartridge(struct mchanger_element *element);

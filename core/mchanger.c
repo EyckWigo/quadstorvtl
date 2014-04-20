@@ -765,9 +765,6 @@ mchanger_init_handlers(struct mchanger *mchanger)
 		case LIBRARY_TYPE_VADIC_SCALARi2000:
 			vadic_init_handlers(mchanger);
 			break;
-		case LIBRARY_TYPE_VQUANTUM_M2500:
-			vqtl_init_handlers(mchanger);
-			break;
 		case LIBRARY_TYPE_VHP_ESL9000:
 		case LIBRARY_TYPE_VHP_ESLSERIES:
 		case LIBRARY_TYPE_VHP_EMLSERIES:
