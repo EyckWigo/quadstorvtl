@@ -15,15 +15,7 @@ rm -f corelib.o
 if [ "$os" = "FreeBSD" ]; then
 	make -f Makefile.bsd $1 QUADSTOR_ROOT=$QUADSTOR_ROOT
 else
-	if [ "$1" != "x86" ]; then
-		make -f Makefile.ext $1 QUADSTOR_ROOT=$QUADSTOR_ROOT
-	else
-		rm -f corelib.c
-		for i in `ls -1 *.c util/*.c | grep -v bsd`; do
-			echo "#include \"$i\"" >> corelib.c
-		done
-		make -f Makefile.ext.x86 QUADSTOR_ROOT=$QUADSTOR_ROOT
-	fi
+	make -f Makefile.ext $1 QUADSTOR_ROOT=$QUADSTOR_ROOT
 fi
 
 if [ "$?" != "0" ]; then

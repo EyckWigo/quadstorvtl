@@ -44,7 +44,7 @@ mkdir -p $QUADSTOR_INSTALL_ROOT/bin
 
 rm -f $QUADSTOR_ROOT/target-mode/fc/qla2xxx
 
-if [ "$1" = "rhel6" -o "$1" = "rhel6x86" ]; then
+if [ "$1" = "rhel6" ]; then
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.upstream qla2xxx
 elif [ "$1" = "sles11sp2" ]; then
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.upstream qla2xxx

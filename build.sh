@@ -24,10 +24,6 @@ rm -f /quadstorvtl/quadstor/export/corelib.o
 cd /quadstorvtl/quadstor/core && sh build.sh clean && sh build.sh $clean
 checkerror
 
-if [ "$clean" = "x86" ]; then
-	clean=""
-fi
-
 if [ "$clean" != install ]; then
 if [ "$os" = "FreeBSD" ]; then
 	cd /quadstorvtl/quadstor/export && make -f Makefile.core $clean
