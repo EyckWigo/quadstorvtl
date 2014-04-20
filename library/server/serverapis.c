@@ -2822,94 +2822,6 @@ tl_server_reload_export(struct tl_comm *comm, struct tl_msg *msg)
 	return 0;
 }
 
-static void 
-copy_file(int destfd, int srcfd)
-{
-	char buf[512];
-	int retval;
-
-	while (1)
-	{
-		retval = read(srcfd, buf, sizeof(buf));
-		if (retval <= 0)
-		{
-			break;
-		}
-
-		retval = write(destfd, buf, retval);
-		if (retval <= 0)
-		{
-			break;
-		}
-	}
-}
-
-static void
-diag_dump_file(char *dirpath, char *src, char *dname)
-{
-	int srcfd;
-	int destfd;
-	char filepath[256];
-
-	srcfd = open(src, O_RDONLY);
-	if (srcfd < 0)
-		return;
-
-	snprintf(filepath, sizeof(filepath), "%s/%s", dirpath, dname);
-	destfd = creat(filepath, S_IRWXU|S_IRWXG|S_IRWXO);
-	if (destfd < 0)
-	{
-		close(srcfd);
-		return;
-	}
-	copy_file(destfd, srcfd);
-	close(destfd);
-	close(srcfd);
-	return;
-}
-
-static int
-tl_server_run_diagnostics(struct tl_comm *comm, struct tl_msg *msg)
-{
-	char diagdir[256];
-	char filepath[512];
-	char cmd[256];
-	FILE *fp;
-	int fd;
-
-	if (sscanf(msg->msg_data, "tempfile: %s\n", diagdir) != 1)
-	{
-		tl_server_msg_failure(comm, msg);
-		return -1;
-	}
-
-	snprintf(filepath, sizeof(filepath), "%s/scdiag.xml", diagdir);
-	fd = creat(filepath, S_IRWXU|S_IRWXG|S_IRWXO);
-	if (fd < 0)
-	{ 
-		DEBUG_ERR("Unable to open filepath %s\n", filepath);
-		tl_server_msg_failure(comm, msg);
-		return -1;
-	}
-	close(fd);
-
-	fp = fopen(filepath, "w");
-	if (!fp)
-	{
-		DEBUG_ERR("Unable to open filepath %s\n", filepath);
-		tl_server_msg_failure(comm, msg);
-		return -1;
-	}
-
-	fclose(fp);
-	diag_dump_file(diagdir, "/proc/scsi/scsi", "procscsi");
-	diag_dump_file(diagdir, "/var/log/messages", "varlog.log");
-	snprintf(cmd, sizeof(cmd), "/quadstorvtl/bin/diaghelper %s", diagdir);
-	system(cmd);
-	tl_server_msg_success(comm, msg);
-	return 0;
-}
-
 struct vdevice *
 find_vdevice_by_name(char *name)
 {
@@ -3861,9 +3773,6 @@ tl_server_handle_msg(struct tl_comm *comm, struct tl_msg *msg)
 			break;
 		case MSG_ID_VTL_VOL_INFO:
 			tl_server_vtl_vol_info(comm, msg);
-			break;
-		case MSG_ID_RUN_DIAGNOSTICS:
-			tl_server_run_diagnostics(comm, msg);
 			break;
 		case MSG_ID_DISK_CHECK:
 			tl_server_disk_check(comm, msg);

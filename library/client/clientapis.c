@@ -567,38 +567,6 @@ tl_client_drive_info(char *tempfile, int tl_id, int target_id, int msgid)
 }
 
 int
-tl_client_run_diagnostics(char *tempfile)
-{
-	struct tl_msg msg;
-
-	msg.msg_id = MSG_ID_RUN_DIAGNOSTICS;
-	msg.msg_data = malloc(512);
-	if (!msg.msg_data)
-		return -1;
-
-	sprintf(msg.msg_data, "tempfile: %s\n", tempfile);
-	msg.msg_len = strlen(msg.msg_data)+1;
-
-	return tl_client_send_msg(&msg, NULL);
-}
-
-int
-tl_client_modify_vtlconf(int tl_id, int op, int val)
-{
-	struct tl_msg msg;
-
-	msg.msg_id = MSG_ID_MODIFY_VTLCONF;
-	msg.msg_data = malloc(512);
-	if (!msg.msg_data)
-		return -1;
-
-	sprintf(msg.msg_data, "tl_id: %d\nop: %d\nval: %d\n", tl_id, op, val);
-	msg.msg_len = strlen(msg.msg_data)+1;
-
-	return tl_client_send_msg(&msg, NULL);
-}
-
-int
 tl_client_reload_export(int tl_id, uint32_t tape_id)
 {
 	struct tl_msg msg;
