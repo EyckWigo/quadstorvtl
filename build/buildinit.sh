@@ -54,16 +54,10 @@ elif [ "$1" = "sles11" ]; then
 	sed -i -e "s/:= qla2xxx.*/:= qla2xxx/" $QUADSTOR_ROOT/target-mode/fc/Makefile
 elif [ "$1" = "debian7" ]; then
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.upstream qla2xxx
-elif [ "$1" = "debian6" ]; then
-	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.deb64 qla2xxx
-	sed -i -e "s/:= qla2xxx.*/:= qla2xxx/" $QUADSTOR_ROOT/target-mode/fc/Makefile
 elif [ "$1" = "bsd9" ]; then
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s isp9.0 isp
 elif [ "$1" = "bsd" ]; then
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s isp8.2 isp
-elif [ "$1" = "rhel5" ]; then
-	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.58 qla2xxx
-	sed -i -e "s/:= qla2xxx.*/:= qla2xxx/" $QUADSTOR_ROOT/target-mode/fc/Makefile
 else
 	cd $QUADSTOR_ROOT/target-mode/fc && ln -s qla2xxx.upstream qla2xxx
 fi
