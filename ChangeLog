@@ -1,3 +1,7 @@
+Release 2.2.17
+	* Cleanup unused functions
+	* Add optimization flags
+
 Release 2.2.16
 	* Fix for incorrect loading of map lookups when spacing to EOD
 	* Fix incorrect FC rule checks where allow rules were ignored

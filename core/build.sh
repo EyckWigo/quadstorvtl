@@ -44,7 +44,7 @@ else
 	fi
 fi
 
-#objcopy --strip-debug corelib.o
-#objcopy --strip-unneeded corelib.o
+objcopy --strip-debug corelib.o
+objcopy --strip-unneeded corelib.o
 mkdir -p $QUADSTOR_ROOT/lib/modules/
 cp -f corelib.o $QUADSTOR_ROOT/lib/modules/
