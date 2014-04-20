@@ -204,25 +204,6 @@ struct qs_kern_cbs {
 	int (*coremod_exit)(void);
 	int (*target_add_fc_rule)(struct fc_rule_config *);
 	int (*target_remove_fc_rule)(struct fc_rule_config *);
-
-	/* Clustering sock defs */
-	sock_t* (*sock_create) (void *priv);
-	int (*sock_connect) (sock_t *sock, uint32_t addr, uint32_t local_addr, uint16_t port);
-	int (*sock_read) (sock_t *sock, void *buf, int len);
-	int (*sock_write) (sock_t *sock, void *buf, int len);
-	int (*sock_write_page) (sock_t *sock, pagestruct_t *page, int off, int pg_len);
-	void (*sock_close) (sock_t *sock, int linger);
-	void (*sock_free) (sock_t *sock);
-	int (*sock_bind) (sock_t *sock, uint32_t addr, uint16_t port);
-	sock_t* (*sock_accept) (sock_t *sock, void *priv, int *error, uint32_t *ipaddr);
-	int (*sock_has_write_space) (sock_t *sock);
-	int (*sock_has_read_data) (sock_t *sock);
-	void (*sock_nopush) (sock_t *sock, int set);
-
-	/* Clustering sock callbacks */
-	void (*sock_read_avail) (void *priv);
-	void (*sock_write_avail) (void *priv);
-	void (*sock_state_change) (void *priv, int newstate);
 };
 
 enum {

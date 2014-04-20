@@ -23,9 +23,7 @@
 #include <sys/fcntl.h>
 #include <sys/mount.h>
 #include <sys/namei.h>
-#include <sys/socket.h>
 #include <sys/sysproto.h>
-#include <sys/socketvar.h>
 #include <sys/file.h>
 #include <sys/filio.h>
 #include <sys/syscallsubr.h>
@@ -513,16 +511,6 @@ bdev_marker(iodev_t *iodev, struct tpriv *tpriv) { }
 #define thread_end()	do {} while(0)
 #define msecs_to_ticks(ms)	(((ms)*hz)/1000)
 #define ticks_to_msecs(t)	(1000*(t) / hz)
-
-typedef struct sys_sock {
-	struct socket *sock;
-	struct sockaddr *saddr;
-	int saddr_len;
-	void *priv;
-	void *state_change;
-	void *data_ready;
-	void *write_space;
-} sock_t;
 
 void kern_panic(char *msg);
 

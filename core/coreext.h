@@ -92,7 +92,6 @@ typedef void pagestruct_t;
 typedef void uma_t;
 typedef void sx_t;
 typedef void mtx_t;
-typedef void sock_t;
 typedef void iodev_t;
 typedef void g_geom_t;
 typedef void g_consumer_t;
@@ -287,19 +286,6 @@ extern struct qs_kern_cbs kcbs;
 #define kernel_thread_check	(*kcbs.kernel_thread_check)
 #define sched_prio	(*kcbs.sched_prio)
 #define get_cpu_count	(*kcbs.get_cpu_count)
-#define sock_create	(*kcbs.sock_create)
-#define sock_connect	(*kcbs.sock_connect)
-#define sock_close	(*kcbs.sock_close)
-#define sock_free	(*kcbs.sock_free)
-#define sock_bind	(*kcbs.sock_bind)
-#define sock_listen	(*kcbs.sock_listen)
-#define sock_accept	(*kcbs.sock_accept)
-#define sock_read	(*kcbs.sock_read)
-#define sock_write	(*kcbs.sock_write)
-#define sock_write_page	(*kcbs.sock_write_page)
-#define sock_has_write_space	(*kcbs.sock_has_write_space)
-#define sock_has_read_data	(*kcbs.sock_has_read_data)
-#define sock_nopush	(*kcbs.sock_nopush)
 #define kern_panic	(*kcbs.kern_panic)
 #define processor_yield	(*kcbs.processor_yield)
 #define kproc_create	(*kcbs.kproc_create)
