@@ -419,10 +419,8 @@ create_scsi_data_rsp(struct iscsi_cmnd *req, struct qsio_scsiio *ctio)
 	int orig_dxfer_len = ctio->dxfer_len;
 
 	size = cmnd_read_size(req);
-	if ((size - ctio->dxfer_len) < 0)
-	{
+	if (size < ctio->dxfer_len)
 		ctio->dxfer_len = size; 
-	}
 
 	if ((ctio->dxfer_len) & 0x3)
 	{
@@ -467,12 +465,11 @@ create_scsi_data_rsp(struct iscsi_cmnd *req, struct qsio_scsiio *ctio)
 	rsp_hdr->flags = ISCSI_FLG_FINAL| ISCSI_FLG_STATUS;
 	rsp_hdr->cmd_status = SAM_STAT_GOOD;
 
-	if ((size - orig_dxfer_len) > 0) {
+	if (size > orig_dxfer_len) {
 		rsp_hdr->flags |= ISCSI_FLG_RESIDUAL_UNDERFLOW;
 		rsp_hdr->residual_count = cpu_to_be32(size - orig_dxfer_len);
 	}
-	else if ((size - orig_dxfer_len) < 0)
-	{
+	else if (size < orig_dxfer_len) {
 		rsp_hdr->flags |= ISCSI_FLG_RESIDUAL_OVERFLOW;
 		rsp_hdr->residual_count = cpu_to_be32(orig_dxfer_len - size); 
 	}
@@ -565,8 +562,15 @@ create_rsp_setup(struct iscsi_cmnd *req, struct qsio_scsiio *ctio, int length, i
 			return rsp;
 		}
 	}
-	BUG();
-	return NULL; 
+
+	DEBUG_WARN_NEW("ctio dxfer len %d pglist cnt %d cmd %x length %d buffer offset %d done %d\n", ctio->dxfer_len, ctio->pglist_cnt, ctio->cdb[0], length, buffer_offset, done);
+	for (i = 0; i < ctio->pglist_cnt; i++) {
+		struct pgdata *pgtmp;
+		pgtmp = pglist[i];
+		DEBUG_WARN_NEW("i %d pgtmp pg_len %d offset %d\n", i, pgtmp->pg_len, pgtmp->pg_offset);
+	}
+	DEBUG_BUG_ON(1);
+	return rsp; 
 }
 
 static void
@@ -642,9 +646,17 @@ create_scsi_data_rsp2(struct iscsi_cmnd *req, struct qsio_scsiio *ctio, int send
 		rsp_hdr->flags |= ISCSI_FLG_RESIDUAL_UNDERFLOW;
 		rsp_hdr->residual_count = cpu_to_be32(size - ctio->dxfer_len);
 	}
+	else if (sendstatus && ctio->dxfer_len > size) {
+		rsp_hdr->flags |= ISCSI_FLG_RESIDUAL_OVERFLOW;
+		rsp_hdr->residual_count = cpu_to_be32(ctio->dxfer_len - size);
+	}
 	else if (size > ctio->dxfer_len) {
 		*ret_flags = ISCSI_FLG_RESIDUAL_UNDERFLOW;
 		*ret_residual =  cpu_to_be32(size - ctio->dxfer_len); 
+	}
+	else if (size < ctio->dxfer_len) {
+		*ret_flags = ISCSI_FLG_RESIDUAL_OVERFLOW;
+		*ret_residual =  cpu_to_be32(ctio->dxfer_len - size);
 	}
 	iscsi_cmnds_init_write(&send, sendstatus);
 	return;
@@ -656,7 +668,9 @@ create_scsi_rsp(struct iscsi_cmnd *req, struct qsio_scsiio *ctio)
 	struct iscsi_cmnd *rsp;
 	struct iscsi_scsi_cmd_hdr *req_hdr = cmnd_hdr(req);
 	struct iscsi_scsi_rsp_hdr *rsp_hdr;
+	uint32_t size;
 
+	size = cmnd_read_size(req);
 	rsp = iscsi_cmnd_create_rsp_cmnd(req, 1);
 
 	rsp_hdr = (struct iscsi_scsi_rsp_hdr *)&rsp->pdu.bhs;
@@ -665,6 +679,10 @@ create_scsi_rsp(struct iscsi_cmnd *req, struct qsio_scsiio *ctio)
 	rsp_hdr->response = ISCSI_RESPONSE_COMMAND_COMPLETED;
 	rsp_hdr->cmd_status = ctio->scsi_status;
 	rsp_hdr->itt = req_hdr->itt;
+	if (size) {
+		rsp_hdr->flags |= ISCSI_FLG_RESIDUAL_UNDERFLOW;
+		rsp_hdr->residual_count = cpu_to_be32(size);
+	}
 	rsp->pdu.datasize = 0;
 	rsp->ctio = ctio;
 	iscsi_cmnd_init_write(rsp, 1);
