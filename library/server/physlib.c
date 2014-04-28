@@ -562,10 +562,10 @@ build_multipath(void)
 			continue;
 		if (strstr(buf, "policy="))
 			continue;
-		tmp = strstr(buf, "`- ");
+		tmp = strstr(buf, "- ");
 		if (!tmp)
 			continue;
-		tmp += 3;
+		tmp += 2;
 		if (sscanf(tmp, "%*d:%*d:%*d:%*d %s ", tdevname) != 1)
 			continue;
 		snprintf(devname, sizeof(devname), "/dev/%s", tdevname);
