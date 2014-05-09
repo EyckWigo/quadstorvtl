@@ -111,7 +111,6 @@ typedef void bio_t;
 #define M_MCHANGER		0
 #define M_SUPERBLK		0
 #define M_TCACHE		0
-#define M_CBS			0
 #define M_PGLIST		0
 #define M_SENSEINFO		0
 #define M_CTIODATA		0

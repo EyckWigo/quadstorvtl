@@ -31,7 +31,6 @@ MALLOC_DEFINE(M_MCHANGERELEMENT, "quad mchanger element", "QUADStor allocations"
 MALLOC_DEFINE(M_MCHANGER, "quad mchanger", "QUADStor allocations");
 MALLOC_DEFINE(M_SUPERBLK, "quad superblk", "QUADStor allocations");
 MALLOC_DEFINE(M_TCACHE, "quad tcache", "QUADStor allocations");
-MALLOC_DEFINE(M_CBS, "quad cbs", "QUADStor allocations");
 MALLOC_DEFINE(M_PGLIST, "quad pg list", "QUADStor allocations");
 MALLOC_DEFINE(M_SENSEINFO, "quad sense info", "QUADStor allocations");
 MALLOC_DEFINE(M_CTIODATA, "quad ctio data", "QUADStor allocations");

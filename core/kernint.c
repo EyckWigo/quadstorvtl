@@ -509,7 +509,6 @@ __device_unregister_interface(struct qs_interface_cbs *cbs)
 		if (iter->interface != cbs->interface)
 			continue;
 		LIST_REMOVE(iter, i_list);
-		free(iter, M_CBS);
 		found = 0;
 		break;
 	}
@@ -526,8 +525,6 @@ node_get_tprt(void)
 int
 __device_register_interface(struct qs_interface_cbs *cbs)
 {
-	struct qs_interface_cbs *new;
-
 	sx_xlock(cbs_lock);
 	if (!atomic_read(&itf_enabled)) {
 		sx_xunlock(cbs_lock);
@@ -544,7 +541,6 @@ __device_register_interface(struct qs_interface_cbs *cbs)
 		return -1;
 	}
 
-	new = zalloc(sizeof(*new), M_CBS, Q_WAITOK);
 	cbs->ctio_new = ctio_new;
 	cbs->ctio_allocate_buffer = ctio_allocate_buffer;
 	cbs->ctio_free_data = ctio_free_data;
@@ -574,8 +570,7 @@ __device_register_interface(struct qs_interface_cbs *cbs)
 	cbs->get_tprt = node_get_tprt;
 	cbs->qload_done = atomic_read(&qload_done);
 
-	memcpy(new, cbs, sizeof(*new));
-	LIST_INSERT_HEAD(&cbs_list, new, i_list);
+	LIST_INSERT_HEAD(&cbs_list, cbs, i_list);
 	sx_xunlock(cbs_lock);
 	return 0;
 }

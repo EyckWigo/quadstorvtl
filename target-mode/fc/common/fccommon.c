@@ -771,6 +771,12 @@ fcbridge_proc_cmd(void *bridge, void *iop)
 	if (!atomic_read(&icbs.itf_enabled))
 		fcbridge_check_interface();
 
+	if (!icbs.qload_done && cdb[0] != INQUIRY) {
+		ctio_construct_sense(ctio, SSD_CURRENT_ERROR, SSD_KEY_ILLEGAL_REQUEST, 0, LOGICAL_UNIT_IS_IN_PROCESS_OF_BECOMING_READY_ASC, LOGICAL_UNIT_IS_IN_PROCESS_OF_BECOMING_READY_ASCQ);
+		__device_send_ccb(ctio);
+		return 0;
+	}
+
 	switch (cdb[0]) {
 	case INQUIRY:
 		retval = fcbridge_cmd_inquiry(fcbridge, ctio);
