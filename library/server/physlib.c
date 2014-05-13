@@ -931,7 +931,7 @@ int
 do_unit_serial_number(char *devname, char *serialnumber, int *serial_len)
 {
 	unsigned char *buffer = NULL;
-	int buffer_len = 196;
+	int buffer_len = 259;
 	unsigned char cmd[6]; /* 6 byte command */
 	unsigned char sense[32];
 	int retval = -1;
@@ -949,7 +949,8 @@ do_unit_serial_number(char *devname, char *serialnumber, int *serial_len)
 	cmd[0] = INQUIRY;
 	cmd[1] |= 0x01; /* EVPD */
 	cmd[2] |= UNIT_SERIAL_NUMBER_PAGE;
-	cmd[4] = buffer_len;
+	cmd[3] = 0x01;
+	cmd[4] = 0x03;
 
 	set_scsi_request(&request, devname, O_RDONLY, cmd, sizeof(cmd), buffer, buffer_len, NULL, 0, sense, sizeof(sense), DEFAULT_TIMEOUT);
 	retval = send_scsi_request(&request);
@@ -972,7 +973,7 @@ do_unit_serial_number(char *devname, char *serialnumber, int *serial_len)
 		min = *serial_len;
 
 	memcpy(serialnumber, buffer+4, min);
-	*serial_len = min;
+	*serial_len = strlen(serialnumber);
 	retval = 0;
 err:
 	if (buffer)

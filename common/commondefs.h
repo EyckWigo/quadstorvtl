@@ -354,10 +354,13 @@ struct raw_bdevint {
 static inline int
 raw_bint_serial_match(struct raw_bdevint *raw_bint, char *serialnumber, int serial_len)
 {
-	int serial_max;
+	int serial_max, min_len;
 
-	serial_max = sizeof(raw_bint->serialnumber);
-	if (memcmp(raw_bint->serialnumber, serialnumber, serial_max))
+	min_len = serial_max = sizeof(raw_bint->serialnumber);
+	if (min_len > serial_len)
+		min_len = serial_len;
+
+	if (memcmp(raw_bint->serialnumber, serialnumber, min_len))
 		return 0;
 
 	if (serial_len > serial_max) {
